@@ -4,11 +4,13 @@ import {
   Avatar,
   Box,
   IconButton,
-  ListItemIcon,
+  FormGroup,
+  FormControlLabel,
   Menu,
   MenuItem,
   Paper,
   Table,
+  Button,
   TableBody,
   TableCell,
   TableContainer,
@@ -17,14 +19,32 @@ import {
   TableRow,
   TextField,
   Toolbar,
-  Typography
+  Typography,
+  Switch
 } from "@mui/material";
-import { AccountCircle, Settings, Logout } from "@mui/icons-material";
 
 const columns = [
-  { id: "no", label: "Rank No.", minWidth: 70, align: "center" },
-  { id: "name", label: "Name", minWidth: 170, align: "center" },
-  { id: "score", label: "Score", minWidth: 100, align: "center" }
+  {
+    id: "no",
+    label: "Rank No.",
+    minWidth: 70,
+    align: "center",
+    format: (value) => value.toLocaleString("en-US")
+  },
+  {
+    id: "name",
+    label: "Name",
+    minWidth: 170,
+    align: "center",
+    format: (value) => value.toLocaleString("en-US")
+  },
+  {
+    id: "score",
+    label: "Score",
+    minWidth: 100,
+    align: "center",
+    format: (value) => value.toLocaleString("en-US")
+  }
 ];
 
 const DefaultRows = [
@@ -43,12 +63,14 @@ const DefaultRows = [
   { no: 13, name: "Player 13", score: 80 },
   { no: 14, name: "Player 14", score: 79 },
   { no: 15, name: "Player 15", score: 77 },
-  { no: 16, name: "Player 16", score: 74 },
-  { no: 17, name: "Player 17", score: 70 },
-  { no: 18, name: "Player 18", score: 67 },
-  { no: 19, name: "Player 19", score: 65 },
-  { no: 20, name: "Player 20", score: 64 }
+  { no: 16, name: "Player 6", score: 72 },
+  { no: 17, name: "Player 7", score: 71 },
+  { no: 18, name: "Player 8", score: 70 },
+  { no: 19, name: "Player 9", score: 68 },
+  { no: 20, name: "Player 10", score: 65 }
 ];
+
+const username = "Player 8";
 
 export default function Ranking() {
   const [rows, setRows] = React.useState(DefaultRows);
@@ -56,6 +78,15 @@ export default function Ranking() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [auth, setAuth] = React.useState(false);
+
+  const handleChange = (event) => {
+    setAuth(event.target.checked);
+  };
+
+  const your_rank = DefaultRows.find((row) => {
+    return row.name === username;
+  });
 
   const onSearch = (event) => {
     let str = event === undefined ? "" : event.target.value;
@@ -90,61 +121,62 @@ export default function Ranking() {
             <Typography color="white" variant="h6" sx={{ flexGrow: 1 }}>
               Obstacle Crossed
             </Typography>
-            <IconButton
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <Avatar>A</Avatar>
-              <Typography m color="white">
-                Admin01
-              </Typography>
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right"
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right"
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              onClick={handleClose}
-            >
-              <MenuItem>
-                <ListItemIcon>
-                  <AccountCircle fontSize="small" />
-                </ListItemIcon>
-                Profile
-              </MenuItem>
-              <MenuItem>
-                <ListItemIcon>
-                  <Settings fontSize="small" />
-                </ListItemIcon>
-                Settings
-              </MenuItem>
-              <MenuItem>
-                <ListItemIcon>
-                  <Logout fontSize="small" />
-                </ListItemIcon>
-                Logout
-              </MenuItem>
-            </Menu>
+            {auth ? (
+              <>
+                <IconButton
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <Avatar>A</Avatar>
+                  <Typography m color="white">
+                    {username}
+                  </Typography>
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right"
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right"
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                  onClick={handleClose}
+                >
+                  <MenuItem>Profile</MenuItem>
+                  <MenuItem>Settings</MenuItem>
+                  <MenuItem>Logout</MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <>
+                <Button color="inherit">Login</Button>
+                <Button color="inherit">Signup</Button>
+              </>
+            )}
           </Toolbar>
         </AppBar>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={auth}
+                onChange={handleChange}
+                aria-label="mode"
+              />
+            }
+            label={auth ? "Login" : "Logout"}
+          />
+        </FormGroup>
       </Box>
-      <Typography
-        my={2}
-        variant="h5"
-        color="inherit"
-        style={{ textAlign: "center" }}
-      >
+      <Typography my={2} variant="h5" style={{ textAlign: "center" }}>
         LEADERBOARD
       </Typography>
       <Toolbar>
@@ -158,12 +190,34 @@ export default function Ranking() {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}
+                  style={{ fontWeight: "bold", minWidth: column.minWidth }}
                 >
                   {column.label}
                 </TableCell>
               ))}
             </TableRow>
+            {auth && (
+              <TableRow>
+                <TableCell
+                  align="center"
+                  style={{ top: 57, backgroundColor: "skyblue" }}
+                >
+                  YOU #{your_rank.no}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  style={{ top: 57, backgroundColor: "skyblue" }}
+                >
+                  {your_rank.name}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  style={{ top: 57, backgroundColor: "skyblue" }}
+                >
+                  {your_rank.score}
+                </TableCell>
+              </TableRow>
+            )}
           </TableHead>
           <TableBody>
             {rows
