@@ -10,7 +10,6 @@ import {
   IconButton,
   ImageList,
   ImageListItem,
-  ListItemIcon,
   Menu,
   MenuItem,
   Paper,
@@ -20,7 +19,6 @@ import {
   Typography,
   Switch
 } from "@mui/material";
-import { AccountCircle, Settings, Logout } from "@mui/icons-material/";
 
 class AboutUs extends React.Component {
   constructor(props) {
@@ -133,24 +131,9 @@ class AboutUs extends React.Component {
                 onClose={this.handleClose}
                 onClick={this.handleClose}
               >
-                <MenuItem>
-                  <ListItemIcon>
-                    <AccountCircle fontSize="small" />
-                  </ListItemIcon>
-                  Profile
-                </MenuItem>
-                <MenuItem>
-                  <ListItemIcon>
-                    <Settings fontSize="small" />
-                  </ListItemIcon>
-                  Settings
-                </MenuItem>
-                <MenuItem>
-                  <ListItemIcon>
-                    <Logout fontSize="small" />
-                  </ListItemIcon>
-                  Logout
-                </MenuItem>
+                <MenuItem>Profile</MenuItem>
+                <MenuItem>Settings</MenuItem>
+                <MenuItem>Logout</MenuItem>
               </Menu>
             </Toolbar>
           </AppBar>
@@ -229,9 +212,7 @@ class AboutUs extends React.Component {
                   type="file"
                   onChange={this.handleInputClick}
                 />
-                <Button variant="contained" component="span">
-                  {"Upload"}
-                </Button>
+                <Button>{"Upload"}</Button>
               </label>
             )}
             <ImageList cols={4}>
